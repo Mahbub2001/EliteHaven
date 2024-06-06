@@ -6,7 +6,7 @@ import Footer from "@/components/footer/footer";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
-  title: "Salocate",
+  title: "EliteHaven",
   description: "Developed by Mahbub ahmed Turza",
 };
 
