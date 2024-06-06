@@ -61,7 +61,7 @@ button {
   .Navbar > .nav-items {
     z-index: 10000;
     position: absolute;
-    top: 125px;
+    top: 80px;
     display: flex;
     padding-top: 10px;
     flex-direction: column;

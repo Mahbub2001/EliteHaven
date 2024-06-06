@@ -3,6 +3,7 @@ import { FaArrowDown } from "react-icons/fa";
 import { Caveat } from "next/font/google";
 import Image from "next/image";
 import SearchBox from "../SearchBox/SearchBox";
+import Button1 from "../Button1/Button1";
 
 const caviate = Caveat({ subsets: ["latin"] });
 
@@ -26,6 +27,8 @@ const HeaderLanding = () => {
               Make the sight.
             </h1>
             <p className="text-3xl lg:text-[12rem] text-white">Move</p>
+            <p className="mt-16"></p>
+            <Button1 name="Sign Up Now"/>
           </div>
         </div>
         <div
@@ -43,6 +46,8 @@ const HeaderLanding = () => {
               Make the sight.
             </h1>
             <p className="text-3xl sm:text-4xl md:text-5xl text-white">Move</p>
+            <p className="mt-10"></p>
+            <Button1 name="Sign up now" />
           </div>
           <div
             className={`${caviate.className} text-center text-white flex flex-col items-center gap-2 mt-16 mb-16 `}
