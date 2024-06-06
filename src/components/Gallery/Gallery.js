@@ -1,5 +1,7 @@
-// components/Gallery.js
-import React from "react";
+"use client";
+import React, { useEffect } from "react";
+import AOS from "aos";
+import "aos/dist/aos.css";
 
 const images = [
   "/g1.png",
@@ -13,6 +15,14 @@ const images = [
 ];
 
 const Gallery = () => {
+  useEffect(() => {
+    return () => {
+      AOS.init({
+        duration: 2000,
+      });
+    };
+  }, []);
+
   return (
     <>
       <div className="flex justify-center items-center px-1">
@@ -26,7 +36,7 @@ const Gallery = () => {
           </div>
           <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {images.map((src, index) => (
-              <div key={index} className="overflow-hidden rounded-lg">
+              <div key={index} data-aos="zoom-in" className="overflow-hidden rounded-lg">
                 <img
                   src={src}
                   alt={`Gallery image ${index + 1}`}

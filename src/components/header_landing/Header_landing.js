@@ -10,7 +10,6 @@ const caviate = Caveat({ subsets: ["latin"] });
 const HeaderLanding = () => {
   const [showScrollIndicator, setShowScrollIndicator] = useState(true);
 
-  // Hide scroll indicator after user scrolls down
   useEffect(() => {
     const handleScroll = () => {
       setShowScrollIndicator(window.scrollY <= 100);

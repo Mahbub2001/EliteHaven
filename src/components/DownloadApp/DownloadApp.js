@@ -1,9 +1,18 @@
 import Image from "next/image";
-import React from "react";
+import React, { useEffect } from "react";
 import { GrAndroid } from "react-icons/gr";
 import { FaApple } from "react-icons/fa";
+import AOS from "aos";
+import "aos/dist/aos.css";
 
 function DownloadApp() {
+  useEffect(() => {
+    return () => {
+      AOS.init({
+        duration: 100,
+      });
+    };
+  }, []);
   return (
     <div className="relative mt-16">
       <div
@@ -13,6 +22,8 @@ function DownloadApp() {
         <div className="pb-5 lg:grid grid-cols-2 container px-3 py-1 justify-center items-center gap-5">
           <div className="hidden lg:block relative">
             <Image
+              data-aos="fade-up"
+              data-aos-anchor-placement="center-center"
               src="/phone.png"
               alt="Trending Place"
               height={400}
@@ -20,8 +31,10 @@ function DownloadApp() {
               className="shadow-md transform skew-y-6 skew-x-3"
             />
           </div>
-          <div className="hidden md:block lg:hidden relative">
+          <div className="hidden md:flex lg:hidden relative justify-center items-center">
             <Image
+              data-aos="fade-up"
+              data-aos-anchor-placement="center-center"
               src="/phone.png"
               alt="Trending Place"
               height={300}
@@ -29,8 +42,10 @@ function DownloadApp() {
               className="shadow-md transform skew-y-6 skew-x-3"
             />
           </div>
-          <div className="sm:hidden relative">
+          <div className="sm:hidden relative flex justify-center">
             <Image
+              data-aos="fade-up"
+              data-aos-anchor-placement="center-center"
               src="/phone.png"
               alt="Trending Place"
               height={200}

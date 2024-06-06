@@ -1,13 +1,22 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./MoreDestination.css";
+import AOS from "aos";
+import "aos/dist/aos.css";
 
 const MoreDestination = () => {
+  useEffect(() => {
+    return () => {
+      AOS.init({
+        duration: 100,
+      });
+    };
+  }, []);
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold mb-8">More Destinations</h1>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         <div className="flex flex-col gap-8">
-          <div className="w-full h-96 relative rounded-xl overflow-hidden">
+          <div data-aos="fade-right" className="w-full h-96 relative rounded-xl overflow-hidden">
             <img
               src="https://images.unsplash.com/photo-1499856871958-5b9627545d1a"
               alt="Paris"
@@ -21,7 +30,7 @@ const MoreDestination = () => {
           </div>
         </div>
         <div className="flex flex-col gap-8">
-          <div className="w-full h-52 relative rounded-xl overflow-hidden">
+          <div data-aos="fade-left" className="w-full h-52 relative rounded-xl overflow-hidden">
             <img
               src="https://images.unsplash.com/photo-1499856871958-5b9627545d1a"
               alt="Paris"
@@ -34,7 +43,7 @@ const MoreDestination = () => {
             </div>
           </div>
 
-          <div className="w-full h-52 relative rounded-xl overflow-hidden">
+          <div data-aos="fade-left" className="w-full h-52 relative rounded-xl overflow-hidden">
             <img
               src="https://images.unsplash.com/photo-1499856871958-5b9627545d1a"
               alt="Paris"
@@ -49,7 +58,7 @@ const MoreDestination = () => {
         </div>
       </div>
       {/* Bottom Section */}
-      <div className="w-full h-52 relative rounded-xl overflow-hidden mt-8">
+      <div data-aos="fade-down" className="w-full h-52 relative rounded-xl overflow-hidden mt-8">
         <img
           src="https://images.unsplash.com/photo-1499856871958-5b9627545d1a"
           alt="Paris"
