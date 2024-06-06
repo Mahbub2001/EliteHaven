@@ -36,7 +36,9 @@ const Gallery = () => {
           </div>
           <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {images.map((src, index) => (
-              <div key={index} data-aos="zoom-in" className="overflow-hidden rounded-lg">
+              <div key={index}
+              //  data-aos="zoom-in" 
+               className="overflow-hidden rounded-lg">
                 <img
                   src={src}
                   alt={`Gallery image ${index + 1}`}

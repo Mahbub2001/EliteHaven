@@ -2,7 +2,7 @@ import React from "react";
 
 function SearchBox() {
   return (
-    <div className="">
+    <div className="px-1">
       <div className="max-w-lg mx-auto my-10">
         <div className="flex items-center bg-white rounded-full shadow-md overflow-hidden">
           <div className="p-2">

@@ -22,8 +22,8 @@ function DownloadApp() {
         <div className="pb-5 lg:grid grid-cols-2 container px-3 py-1 justify-center items-center gap-5">
           <div className="hidden lg:block relative">
             <Image
-              data-aos="fade-up"
-              data-aos-anchor-placement="center-center"
+              // data-aos="fade-up"
+              // data-aos-anchor-placement="center-center"
               src="/phone.png"
               alt="Trending Place"
               height={400}
@@ -33,8 +33,8 @@ function DownloadApp() {
           </div>
           <div className="hidden md:flex lg:hidden relative justify-center items-center">
             <Image
-              data-aos="fade-up"
-              data-aos-anchor-placement="center-center"
+              // data-aos="fade-up"
+              // data-aos-anchor-placement="center-center"
               src="/phone.png"
               alt="Trending Place"
               height={300}
@@ -44,8 +44,8 @@ function DownloadApp() {
           </div>
           <div className="sm:hidden relative flex justify-center">
             <Image
-              data-aos="fade-up"
-              data-aos-anchor-placement="center-center"
+              // data-aos="fade-up"
+              // data-aos-anchor-placement="center-center"
               src="/phone.png"
               alt="Trending Place"
               height={200}

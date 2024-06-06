@@ -20,8 +20,8 @@ export default function Home() {
         <Popular_Cities />
         <Trending />
         <MoreDestination />
-        <DownloadApp />
-        <Gallery />
+        {/* <DownloadApp />
+        <Gallery /> */}
       </main>
     </>
   );
