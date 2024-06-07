@@ -15,13 +15,6 @@ const images = [
 ];
 
 const Gallery = () => {
-  useEffect(() => {
-    return () => {
-      AOS.init({
-        duration: window.innerWidth > 768 ? 2000 : 1000, 
-      });
-    };
-  }, []);
 
   return (
     <>
@@ -34,9 +27,11 @@ const Gallery = () => {
               amet sint. Velit officia consequat duis enim velit mollit.
             </p>
           </div>
-          <div className="overflow-x-hidden overflow-y-hidden mt-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {images.map((src, index) => (
-              <div key={index} data-aos="zoom-in" className="overflow-hidden rounded-lg">
+              <div key={index}
+              //  data-aos="zoom-in" 
+               className="overflow-hidden rounded-lg">
                 <img
                   src={src}
                   alt={`Gallery image ${index + 1}`}
