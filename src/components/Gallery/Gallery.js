@@ -34,7 +34,7 @@ const Gallery = () => {
               amet sint. Velit officia consequat duis enim velit mollit.
             </p>
           </div>
-          <div className="overflow-x-hidden mt-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          <div className="overflow-x-hidden overflow-y-hidden mt-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {images.map((src, index) => (
               <div key={index}
                data-aos="zoom-in" 
