@@ -15,6 +15,13 @@ const images = [
 ];
 
 const Gallery = () => {
+  useEffect(() => {
+    return () => {
+      AOS.init({
+        duration: 2000,
+      });
+    };
+  }, []);
 
   return (
     <>
