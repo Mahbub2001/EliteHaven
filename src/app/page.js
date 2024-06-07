@@ -19,7 +19,7 @@ export default function Home() {
         <SearchBox />
         <Popular_Cities />
         <Trending />
-        {/* <MoreDestination /> */}
+        <MoreDestination />
         <DownloadApp />
         <Gallery />
       </main>

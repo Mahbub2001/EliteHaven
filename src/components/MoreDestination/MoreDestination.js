@@ -3,7 +3,7 @@ import "./MoreDestination.css";
 
 const MoreDestination = () => {
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-4 py-8 overflow-hidden">
       <h1 className="text-3xl font-bold mb-8 text-center">More Destinations</h1>
       <div className="container mx-auto">
         <div className="flex flex-wrap -mx-4">
