@@ -37,6 +37,9 @@ const Navbar = () => {
             <Link href="/" className="">
               Home
             </Link>
+            <Link href="/common/destinations" className="">
+              Popular Destinations
+            </Link>
             <Link href="/common/about_us" className="">
               About us
             </Link>

@@ -1,327 +1,165 @@
-import React from "react";
-import "./MoreDestination.css";
+import Image from "next/image";
+import Link from "next/link";
+import React, { useState, useEffect } from "react";
 
 const MoreDestination = () => {
+  const [destinations, setDestinations] = useState([]);
+  const [showAll, setShowAll] = useState(false);
+
+  useEffect(() => {
+    const fetchDestinations = async () => {
+      try {
+        const response = await fetch(
+          "https://elitehaven-backend.onrender.com/public/advertisements/"
+        );
+        if (!response.ok) {
+          throw new Error("Failed to fetch data");
+        }
+        const data = await response.json();
+        setDestinations(data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchDestinations();
+  }, []);
+
+  const displayedDestinations = showAll
+    ? destinations
+    : destinations.slice(0, 4);
+
+  const specialityColors = [
+    "bg-blue-200",
+    "bg-green-200",
+    "bg-yellow-200",
+    "bg-red-200",
+    "bg-purple-200",
+    "bg-pink-200",
+    "bg-indigo-200",
+    "bg-gray-200",
+  ];
+
   return (
-    <div className="container mx-auto px-4 py-8 overflow-hidden">
+    <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold mb-8 text-center">More Destinations</h1>
-      <div className="container mx-auto">
-        <div className="flex flex-wrap -mx-4">
-          <div className="w-full sm:w-1/2 md:w-1/2 xl:w-1/4 p-4">
-            <a
-              href=""
-              className="c-card block bg-white shadow-md hover:shadow-xl rounded-lg overflow-hidden"
-            >
-              <div className="relative pb-48 overflow-hidden">
-                <img
-                  className="absolute inset-0 h-full w-full object-cover"
-                  src="/Vik.png"
-                  alt=""
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        {displayedDestinations.map((destination) => (
+          <div
+            key={destination.id}
+            className="hover:shadow-xl transition duration-300 ease-in-out overflow-hidden rounded-lg shadow-md relative"
+          >
+            <a href={destination.url} className="block bg-white">
+              <div className="relative pb-2/3">
+                <Image
+                  className="w-full h-full object-cover"
+                  src={destination?.thumbnail_picture}
+                  alt={destination?.title}
+                  width={200}
+                  height={200}
                 />
+                {destination.highlight && (
+                  <span className="absolute top-0 right-0 m-4 px-2 py-1 bg-orange-200 text-orange-800 rounded-full font-semibold text-xs uppercase tracking-wide z-10">
+                    Highlight
+                  </span>
+                )}
               </div>
               <div className="p-4">
-                <span className="inline-block px-2 py-1 leading-none bg-orange-200 text-orange-800 rounded-full font-semibold uppercase tracking-wide text-xs">
-                  Highlight
-                </span>
-                <h2 className="mt-2 mb-2 font-bold">
-                  Purus Ullamcorper Inceptos Nibh
+                <h2 className="text-lg font-bold mb-2 leading-tight">
+                  {destination?.title}
                 </h2>
-                <p className="text-sm">
-                  Cras justo odio, dapibus ac facilisis in, egestas eget quam.
-                  Donec ullamcorper nulla non metus auctor fringilla.
-                </p>
-                <div className="mt-3 flex items-center">
-                  <span className="text-sm font-semibold">ab</span>&nbsp;
-                  <span className="font-bold text-xl">45,00</span>&nbsp;
-                  <span className="text-sm font-semibold">€</span>
+                <p className="text-sm mb-4">{destination.description}</p>
+                <div className="flex items-center mb-4">
+                  <span className="text-sm font-semibold">ab</span>
+                  <span className="ml-1 text-xl font-bold">
+                    {destination.price}
+                  </span>
+                  <span className="ml-1 text-sm font-semibold">€</span>
+                </div>
+                <div className="flex items-center text-sm text-gray-600">
+                  {destination.map_location && (
+                    <a
+                      href={destination.map_location}
+                      className="flex items-center mr-4 text-gray-900 hover:text-blue-500"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <svg
+                        className="h-5 w-5 fill-current mr-1"
+                        viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path d="M12 2C7.03 2 3 6.03 3 11a8.2 8.2 0 0 0 1.88 5.27L12 22l7.12-5.73A8.2 8.2 0 0 0 21 11c0-4.97-4.03-9-9-9zm0 13c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4z" />
+                        <path d="M0 0h24v24H0z" fill="none" />
+                      </svg>
+                      View on Map
+                    </a>
+                  )}
+                  {destination.discount && (
+                    <span className="flex items-center">
+                      <i className="far fa-address-card fa-fw mr-1"></i>{" "}
+                      Ermäßigung mit Karte
+                    </span>
+                  )}
+                </div>
+                <div className="flex flex-wrap mt-2">
+                  {destination.speciality &&
+                    destination.speciality.split(",").map((item, index) => (
+                      <span
+                        key={index}
+                        className={`inline-block px-3 py-1 mb-2 mr-2 text-sm font-semibold rounded-full ${
+                          specialityColors[index % specialityColors.length]
+                        }`}
+                      >
+                        {item.trim()}
+                      </span>
+                    ))}
                 </div>
               </div>
-              <div className="p-4 border-t border-b text-xs text-gray-700">
-                <span className="flex items-center mb-1">
-                  <i className="far fa-clock fa-fw mr-2 text-gray-900"></i> 3 Tage
-                </span>
-                <span className="flex items-center">
-                  <i className="far fa-address-card fa-fw text-gray-900 mr-2"></i>{" "}
-                  Ermäßigung mit Karte
-                </span>
-              </div>
-              <div className="p-4 flex items-center text-sm text-gray-600">
-                <svg
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-4 w-4 fill-current text-yellow-500"
-                >
-                  <path d="M8.128 19.825a1.586 1.586 0 0 1-1.643-.117 1.543 1.543 0 0 1-.53-.662 1.515 1.515 0 0 1-.096-.837l.736-4.247-3.13-3a1.514 1.514 0 0 1-.39-1.569c.09-.271.254-.513.475-.698.22-.185.49-.306.776-.35L8.66 7.73l1.925-3.862c.128-.26.328-.48.577-.633a1.584 1.584 0 0 1 1.662 0c.25.153.45.373.577.633l1.925 3.847 4.334.615c.29.042.562.162.785.348.224.186.39.43.48.704a1.514 1.514 0 0 1-.404 1.58l-3.13 3 .736 4.247c.047.282.014.572-.096.837-.111.265-.294.494-.53.662a1.582 1.582 0 0 1-1.643.117l-3.865-2-3.865 2z"></path>
-                </svg>
-                <svg
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-4 w-4 fill-current text-yellow-500"
-                >
-                  <path d="M8.128 19.825a1.586 1.586 0 0 1-1.643-.117 1.543 1.543 0 0 1-.53-.662 1.515 1.515 0 0 1-.096-.837l.736-4.247-3.13-3a1.514 1.514 0 0 1-.39-1.569c.09-.271.254-.513.475-.698.22-.185.49-.306.776-.35L8.66 7.73l1.925-3.862c.128-.26.328-.48.577-.633a1.584 1.584 0 0 1 1.662 0c.25.153.45.373.577.633l1.925 3.847 4.334.615c.29.042.562.162.785.348.224.186.39.43.48.704a1.514 1.514 0 0 1-.404 1.58l-3.13 3 .736 4.247c.047.282.014.572-.096.837-.111.265-.294.494-.53.662a1.582 1.582 0 0 1-1.643.117l-3.865-2-3.865 2z"></path>
-                </svg>
-                <svg
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-4 w-4 fill-current text-yellow-500"
-                >
-                  <path d="M8.128 19.825a1.586 1.586 0 0 1-1.643-.117 1.543 1.543 0 0 1-.53-.662 1.515 1.515 0 0 1-.096-.837l.736-4.247-3.13-3a1.514 1.514 0 0 1-.39-1.569c.09-.271.254-.513.475-.698.22-.185.49-.306.776-.35L8.66 7.73l1.925-3.862c.128-.26.328-.48.577-.633a1.584 1.584 0 0 1 1.662 0c.25.153.45.373.577.633l1.925 3.847 4.334.615c.29.042.562.162.785.348.224.186.39.43.48.704a1.514 1.514 0 0 1-.404 1.58l-3.13 3 .736 4.247c.047.282.014.572-.096.837-.111.265-.294.494-.53.662a1.582 1.582 0 0 1-1.643.117l-3.865-2-3.865 2z"></path>
-                </svg>
-                <svg
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-4 w-4 fill-current text-yellow-500"
-                >
-                  <path d="M8.128 19.825a1.586 1.586 0 0 1-1.643-.117 1.543 1.543 0 0 1-.53-.662 1.515 1.515 0 0 1-.096-.837l.736-4.247-3.13-3a1.514 1.514 0 0 1-.39-1.569c.09-.271.254-.513.475-.698.22-.185.49-.306.776-.35L8.66 7.73l1.925-3.862c.128-.26.328-.48.577-.633a1.584 1.584 0 0 1 1.662 0c.25.153.45.373.577.633l1.925 3.847 4.334.615c.29.042.562.162.785.348.224.186.39.43.48.704a1.514 1.514 0 0 1-.404 1.58l-3.13 3 .736 4.247c.047.282.014.572-.096.837-.111.265-.294.494-.53.662a1.582 1.582 0 0 1-1.643.117l-3.865-2-3.865 2z"></path>
-                </svg>
-                <svg
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-4 w-4 fill-current text-yellow-500"
-                >
-                  <path d="M8.128 19.825a1.586 1.586 0 0 1-1.643-.117 1.543 1.543 0 0 1-.53-.662 1.515 1.515 0 0 1-.096-.837l.736-4.247-3.13-3a1.514 1.514 0 0 1-.39-1.569c.09-.271.254-.513.475-.698.22-.185.49-.306.776-.35L8.66 7.73l1.925-3.862c.128-.26.328-.48.577-.633a1.584 1.584 0 0 1 1.662 0c.25.153.45.373.577.633l1.925 3.847 4.334.615c.29.042.562.162.785.348.224.186.39.43.48.704a1.514 1.514 0 0 1-.404 1.58l-3.13 3 .736 4.247c.047.282.014.572-.096.837-.111.265-.294.494-.53.662a1.582 1.582 0 0 1-1.643.117l-3.865-2-3.865 2z"></path>
-                </svg>
-                ...
-              </div>
             </a>
-          </div>
-          <div className="w-full sm:w-1/2 md:w-1/2 xl:w-1/4 p-4">
-            <a
-              href=""
-              className="c-card block bg-white shadow-md hover:shadow-xl rounded-lg overflow-hidden"
-            >
-              <div className="relative pb-48 overflow-hidden">
-                <img
-                  className="absolute inset-0 h-full w-full object-cover"
-                  src="/Montego.png"
-                  alt=""
-                />
-              </div>
-              <div className="p-4">
-                <span className="inline-block px-2 py-1 leading-none bg-orange-200 text-orange-800 rounded-full font-semibold uppercase tracking-wide text-xs">
-                  Highlight
-                </span>
-                <h2 className="mt-2 mb-2 font-bold">
-                  Purus Ullamcorper Inceptos Nibh
-                </h2>
-                <p className="text-sm">
-                  Cras justo odio, dapibus ac facilisis in, egestas eget quam.
-                  Donec ullamcorper nulla non metus auctor fringilla.
+            <div className="flex items-center mb-2 text-sm text-gray-700">
+              <button
+              // href={`/wishlist/${destination.id}`}
+              >
+                <p className="flex items-center mr-4 text-gray-900 hover:text-blue-500">
+                  <svg
+                    className="h-5 w-5 fill-current mr-1"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                  </svg>
+                  Add to Wishlist
                 </p>
-                <div className="mt-3 flex items-center">
-                  <span className="text-sm font-semibold">ab</span>&nbsp;
-                  <span className="font-bold text-xl">45,00</span>&nbsp;
-                  <span className="text-sm font-semibold">€</span>
-                </div>
-              </div>
-              <div className="p-4 border-t border-b text-xs text-gray-700">
-                <span className="flex items-center mb-1">
-                  <i className="far fa-clock fa-fw mr-2 text-gray-900"></i> 3 Tage
-                </span>
-                <span className="flex items-center">
-                  <i className="far fa-address-card fa-fw text-gray-900 mr-2"></i>{" "}
-                  Ermäßigung mit Karte
-                </span>
-              </div>
-              <div className="p-4 flex items-center text-sm text-gray-600">
-                <svg
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-4 w-4 fill-current text-yellow-500"
-                >
-                  <path d="M8.128 19.825a1.586 1.586 0 0 1-1.643-.117 1.543 1.543 0 0 1-.53-.662 1.515 1.515 0 0 1-.096-.837l.736-4.247-3.13-3a1.514 1.514 0 0 1-.39-1.569c.09-.271.254-.513.475-.698.22-.185.49-.306.776-.35L8.66 7.73l1.925-3.862c.128-.26.328-.48.577-.633a1.584 1.584 0 0 1 1.662 0c.25.153.45.373.577.633l1.925 3.847 4.334.615c.29.042.562.162.785.348.224.186.39.43.48.704a1.514 1.514 0 0 1-.404 1.58l-3.13 3 .736 4.247c.047.282.014.572-.096.837-.111.265-.294.494-.53.662a1.582 1.582 0 0 1-1.643.117l-3.865-2-3.865 2z"></path>
-                </svg>
-                <svg
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-4 w-4 fill-current text-yellow-500"
-                >
-                  <path d="M8.128 19.825a1.586 1.586 0 0 1-1.643-.117 1.543 1.543 0 0 1-.53-.662 1.515 1.515 0 0 1-.096-.837l.736-4.247-3.13-3a1.514 1.514 0 0 1-.39-1.569c.09-.271.254-.513.475-.698.22-.185.49-.306.776-.35L8.66 7.73l1.925-3.862c.128-.26.328-.48.577-.633a1.584 1.584 0 0 1 1.662 0c.25.153.45.373.577.633l1.925 3.847 4.334.615c.29.042.562.162.785.348.224.186.39.43.48.704a1.514 1.514 0 0 1-.404 1.58l-3.13 3 .736 4.247c.047.282.014.572-.096.837-.111.265-.294.494-.53.662a1.582 1.582 0 0 1-1.643.117l-3.865-2-3.865 2z"></path>
-                </svg>
-                <svg
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-4 w-4 fill-current text-yellow-500"
-                >
-                  <path d="M8.128 19.825a1.586 1.586 0 0 1-1.643-.117 1.543 1.543 0 0 1-.53-.662 1.515 1.515 0 0 1-.096-.837l.736-4.247-3.13-3a1.514 1.514 0 0 1-.39-1.569c.09-.271.254-.513.475-.698.22-.185.49-.306.776-.35L8.66 7.73l1.925-3.862c.128-.26.328-.48.577-.633a1.584 1.584 0 0 1 1.662 0c.25.153.45.373.577.633l1.925 3.847 4.334.615c.29.042.562.162.785.348.224.186.39.43.48.704a1.514 1.514 0 0 1-.404 1.58l-3.13 3 .736 4.247c.047.282.014.572-.096.837-.111.265-.294.494-.53.662a1.582 1.582 0 0 1-1.643.117l-3.865-2-3.865 2z"></path>
-                </svg>
-                <svg
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-4 w-4 fill-current text-yellow-500"
-                >
-                  <path d="M8.128 19.825a1.586 1.586 0 0 1-1.643-.117 1.543 1.543 0 0 1-.53-.662 1.515 1.515 0 0 1-.096-.837l.736-4.247-3.13-3a1.514 1.514 0 0 1-.39-1.569c.09-.271.254-.513.475-.698.22-.185.49-.306.776-.35L8.66 7.73l1.925-3.862c.128-.26.328-.48.577-.633a1.584 1.584 0 0 1 1.662 0c.25.153.45.373.577.633l1.925 3.847 4.334.615c.29.042.562.162.785.348.224.186.39.43.48.704a1.514 1.514 0 0 1-.404 1.58l-3.13 3 .736 4.247c.047.282.014.572-.096.837-.111.265-.294.494-.53.662a1.582 1.582 0 0 1-1.643.117l-3.865-2-3.865 2z"></path>
-                </svg>
-                <svg
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-4 w-4 fill-current text-yellow-500"
-                >
-                  <path d="M8.128 19.825a1.586 1.586 0 0 1-1.643-.117 1.543 1.543 0 0 1-.53-.662 1.515 1.515 0 0 1-.096-.837l.736-4.247-3.13-3a1.514 1.514 0 0 1-.39-1.569c.09-.271.254-.513.475-.698.22-.185.49-.306.776-.35L8.66 7.73l1.925-3.862c.128-.26.328-.48.577-.633a1.584 1.584 0 0 1 1.662 0c.25.153.45.373.577.633l1.925 3.847 4.334.615c.29.042.562.162.785.348.224.186.39.43.48.704a1.514 1.514 0 0 1-.404 1.58l-3.13 3 .736 4.247c.047.282.014.572-.096.837-.111.265-.294.494-.53.662a1.582 1.582 0 0 1-1.643.117l-3.865-2-3.865 2z"></path>
-                </svg>
-                ...
-              </div>
-            </a>
-          </div>
-          <div className="w-full sm:w-1/2 md:w-1/2 xl:w-1/4 p-4">
-            <a
-              href=""
-              className="c-card block bg-white shadow-md hover:shadow-xl rounded-lg overflow-hidden"
-            >
-              <div className="relative pb-48 overflow-hidden">
-                <img
-                  className="absolute inset-0 h-full w-full object-cover"
-                  src="/Hamnoy.png"
-                  alt=""
-                />
-              </div>
-              <div className="p-4">
-                <span className="inline-block px-2 py-1 leading-none bg-orange-200 text-orange-800 rounded-full font-semibold uppercase tracking-wide text-xs">
-                  Highlight
-                </span>
-                <h2 className="mt-2 mb-2 font-bold">
-                  Purus Ullamcorper Inceptos Nibh
-                </h2>
-                <p className="text-sm">
-                  Cras justo odio, dapibus ac facilisis in, egestas eget quam.
-                  Donec ullamcorper nulla non metus auctor fringilla.
+              </button>
+              <Link href={`/details/${destination.id}`}>
+                <p className="flex items-center hover:text-blue-500">
+                  <svg
+                    className="h-5 w-5 fill-current mr-1"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4 13h-8v-2h8v2zm0-4h-8v-2h8v2zm0-4h-8V7h8v2z" />
+                  </svg>
+                  See Details
                 </p>
-                <div className="mt-3 flex items-center">
-                  <span className="text-sm font-semibold">ab</span>&nbsp;
-                  <span className="font-bold text-xl">45,00</span>&nbsp;
-                  <span className="text-sm font-semibold">€</span>
-                </div>
-              </div>
-              <div className="p-4 border-t border-b text-xs text-gray-700">
-                <span className="flex items-center mb-1">
-                  <i className="far fa-clock fa-fw mr-2 text-gray-900"></i> 3 Tage
-                </span>
-                <span className="flex items-center">
-                  <i className="far fa-address-card fa-fw text-gray-900 mr-2"></i>{" "}
-                  Ermäßigung mit Karte
-                </span>
-              </div>
-              <div className="p-4 flex items-center text-sm text-gray-600">
-                <svg
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-4 w-4 fill-current text-yellow-500"
-                >
-                  <path d="M8.128 19.825a1.586 1.586 0 0 1-1.643-.117 1.543 1.543 0 0 1-.53-.662 1.515 1.515 0 0 1-.096-.837l.736-4.247-3.13-3a1.514 1.514 0 0 1-.39-1.569c.09-.271.254-.513.475-.698.22-.185.49-.306.776-.35L8.66 7.73l1.925-3.862c.128-.26.328-.48.577-.633a1.584 1.584 0 0 1 1.662 0c.25.153.45.373.577.633l1.925 3.847 4.334.615c.29.042.562.162.785.348.224.186.39.43.48.704a1.514 1.514 0 0 1-.404 1.58l-3.13 3 .736 4.247c.047.282.014.572-.096.837-.111.265-.294.494-.53.662a1.582 1.582 0 0 1-1.643.117l-3.865-2-3.865 2z"></path>
-                </svg>
-                <svg
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-4 w-4 fill-current text-yellow-500"
-                >
-                  <path d="M8.128 19.825a1.586 1.586 0 0 1-1.643-.117 1.543 1.543 0 0 1-.53-.662 1.515 1.515 0 0 1-.096-.837l.736-4.247-3.13-3a1.514 1.514 0 0 1-.39-1.569c.09-.271.254-.513.475-.698.22-.185.49-.306.776-.35L8.66 7.73l1.925-3.862c.128-.26.328-.48.577-.633a1.584 1.584 0 0 1 1.662 0c.25.153.45.373.577.633l1.925 3.847 4.334.615c.29.042.562.162.785.348.224.186.39.43.48.704a1.514 1.514 0 0 1-.404 1.58l-3.13 3 .736 4.247c.047.282.014.572-.096.837-.111.265-.294.494-.53.662a1.582 1.582 0 0 1-1.643.117l-3.865-2-3.865 2z"></path>
-                </svg>
-                <svg
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-4 w-4 fill-current text-yellow-500"
-                >
-                  <path d="M8.128 19.825a1.586 1.586 0 0 1-1.643-.117 1.543 1.543 0 0 1-.53-.662 1.515 1.515 0 0 1-.096-.837l.736-4.247-3.13-3a1.514 1.514 0 0 1-.39-1.569c.09-.271.254-.513.475-.698.22-.185.49-.306.776-.35L8.66 7.73l1.925-3.862c.128-.26.328-.48.577-.633a1.584 1.584 0 0 1 1.662 0c.25.153.45.373.577.633l1.925 3.847 4.334.615c.29.042.562.162.785.348.224.186.39.43.48.704a1.514 1.514 0 0 1-.404 1.58l-3.13 3 .736 4.247c.047.282.014.572-.096.837-.111.265-.294.494-.53.662a1.582 1.582 0 0 1-1.643.117l-3.865-2-3.865 2z"></path>
-                </svg>
-                <svg
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-4 w-4 fill-current text-yellow-500"
-                >
-                  <path d="M8.128 19.825a1.586 1.586 0 0 1-1.643-.117 1.543 1.543 0 0 1-.53-.662 1.515 1.515 0 0 1-.096-.837l.736-4.247-3.13-3a1.514 1.514 0 0 1-.39-1.569c.09-.271.254-.513.475-.698.22-.185.49-.306.776-.35L8.66 7.73l1.925-3.862c.128-.26.328-.48.577-.633a1.584 1.584 0 0 1 1.662 0c.25.153.45.373.577.633l1.925 3.847 4.334.615c.29.042.562.162.785.348.224.186.39.43.48.704a1.514 1.514 0 0 1-.404 1.58l-3.13 3 .736 4.247c.047.282.014.572-.096.837-.111.265-.294.494-.53.662a1.582 1.582 0 0 1-1.643.117l-3.865-2-3.865 2z"></path>
-                </svg>
-                <svg
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-4 w-4 fill-current text-yellow-500"
-                >
-                  <path d="M8.128 19.825a1.586 1.586 0 0 1-1.643-.117 1.543 1.543 0 0 1-.53-.662 1.515 1.515 0 0 1-.096-.837l.736-4.247-3.13-3a1.514 1.514 0 0 1-.39-1.569c.09-.271.254-.513.475-.698.22-.185.49-.306.776-.35L8.66 7.73l1.925-3.862c.128-.26.328-.48.577-.633a1.584 1.584 0 0 1 1.662 0c.25.153.45.373.577.633l1.925 3.847 4.334.615c.29.042.562.162.785.348.224.186.39.43.48.704a1.514 1.514 0 0 1-.404 1.58l-3.13 3 .736 4.247c.047.282.014.572-.096.837-.111.265-.294.494-.53.662a1.582 1.582 0 0 1-1.643.117l-3.865-2-3.865 2z"></path>
-                </svg>
-                ...
-              </div>
-            </a>
+              </Link>
+            </div>
           </div>
-          <div className="w-full sm:w-1/2 md:w-1/2 xl:w-1/4 p-4">
-            <a
-              href=""
-              className="c-card block bg-white shadow-md hover:shadow-xl rounded-lg overflow-hidden"
-            >
-              <div className="relative pb-48 overflow-hidden">
-                <img
-                  className="absolute inset-0 h-full w-full object-cover"
-                  src="/Vik.png"
-                  alt=""
-                />
-              </div>
-              <div className="p-4">
-                <span className="inline-block px-2 py-1 leading-none bg-orange-200 text-orange-800 rounded-full font-semibold uppercase tracking-wide text-xs">
-                  Highlight
-                </span>
-                <h2 className="mt-2 mb-2 font-bold">
-                  Purus Ullamcorper Inceptos Nibh
-                </h2>
-                <p className="text-sm">
-                  Cras justo odio, dapibus ac facilisis in, egestas eget quam.
-                  Donec ullamcorper nulla non metus auctor fringilla.
-                </p>
-                <div className="mt-3 flex items-center">
-                  <span className="text-sm font-semibold">ab</span>&nbsp;
-                  <span className="font-bold text-xl">45,00</span>&nbsp;
-                  <span className="text-sm font-semibold">€</span>
-                </div>
-              </div>
-              <div className="p-4 border-t border-b text-xs text-gray-700">
-                <span className="flex items-center mb-1">
-                  <i className="far fa-clock fa-fw mr-2 text-gray-900"></i> 3 Tage
-                </span>
-                <span className="flex items-center">
-                  <i className="far fa-address-card fa-fw text-gray-900 mr-2"></i>{" "}
-                  Ermäßigung mit Karte
-                </span>
-              </div>
-              <div className="p-4 flex items-center text-sm text-gray-600">
-                <svg
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-4 w-4 fill-current text-yellow-500"
-                >
-                  <path d="M8.128 19.825a1.586 1.586 0 0 1-1.643-.117 1.543 1.543 0 0 1-.53-.662 1.515 1.515 0 0 1-.096-.837l.736-4.247-3.13-3a1.514 1.514 0 0 1-.39-1.569c.09-.271.254-.513.475-.698.22-.185.49-.306.776-.35L8.66 7.73l1.925-3.862c.128-.26.328-.48.577-.633a1.584 1.584 0 0 1 1.662 0c.25.153.45.373.577.633l1.925 3.847 4.334.615c.29.042.562.162.785.348.224.186.39.43.48.704a1.514 1.514 0 0 1-.404 1.58l-3.13 3 .736 4.247c.047.282.014.572-.096.837-.111.265-.294.494-.53.662a1.582 1.582 0 0 1-1.643.117l-3.865-2-3.865 2z"></path>
-                </svg>
-                <svg
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-4 w-4 fill-current text-yellow-500"
-                >
-                  <path d="M8.128 19.825a1.586 1.586 0 0 1-1.643-.117 1.543 1.543 0 0 1-.53-.662 1.515 1.515 0 0 1-.096-.837l.736-4.247-3.13-3a1.514 1.514 0 0 1-.39-1.569c.09-.271.254-.513.475-.698.22-.185.49-.306.776-.35L8.66 7.73l1.925-3.862c.128-.26.328-.48.577-.633a1.584 1.584 0 0 1 1.662 0c.25.153.45.373.577.633l1.925 3.847 4.334.615c.29.042.562.162.785.348.224.186.39.43.48.704a1.514 1.514 0 0 1-.404 1.58l-3.13 3 .736 4.247c.047.282.014.572-.096.837-.111.265-.294.494-.53.662a1.582 1.582 0 0 1-1.643.117l-3.865-2-3.865 2z"></path>
-                </svg>
-                <svg
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-4 w-4 fill-current text-yellow-500"
-                >
-                  <path d="M8.128 19.825a1.586 1.586 0 0 1-1.643-.117 1.543 1.543 0 0 1-.53-.662 1.515 1.515 0 0 1-.096-.837l.736-4.247-3.13-3a1.514 1.514 0 0 1-.39-1.569c.09-.271.254-.513.475-.698.22-.185.49-.306.776-.35L8.66 7.73l1.925-3.862c.128-.26.328-.48.577-.633a1.584 1.584 0 0 1 1.662 0c.25.153.45.373.577.633l1.925 3.847 4.334.615c.29.042.562.162.785.348.224.186.39.43.48.704a1.514 1.514 0 0 1-.404 1.58l-3.13 3 .736 4.247c.047.282.014.572-.096.837-.111.265-.294.494-.53.662a1.582 1.582 0 0 1-1.643.117l-3.865-2-3.865 2z"></path>
-                </svg>
-                <svg
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-4 w-4 fill-current text-yellow-500"
-                >
-                  <path d="M8.128 19.825a1.586 1.586 0 0 1-1.643-.117 1.543 1.543 0 0 1-.53-.662 1.515 1.515 0 0 1-.096-.837l.736-4.247-3.13-3a1.514 1.514 0 0 1-.39-1.569c.09-.271.254-.513.475-.698.22-.185.49-.306.776-.35L8.66 7.73l1.925-3.862c.128-.26.328-.48.577-.633a1.584 1.584 0 0 1 1.662 0c.25.153.45.373.577.633l1.925 3.847 4.334.615c.29.042.562.162.785.348.224.186.39.43.48.704a1.514 1.514 0 0 1-.404 1.58l-3.13 3 .736 4.247c.047.282.014.572-.096.837-.111.265-.294.494-.53.662a1.582 1.582 0 0 1-1.643.117l-3.865-2-3.865 2z"></path>
-                </svg>
-                <svg
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-4 w-4 fill-current text-yellow-500"
-                >
-                  <path d="M8.128 19.825a1.586 1.586 0 0 1-1.643-.117 1.543 1.543 0 0 1-.53-.662 1.515 1.515 0 0 1-.096-.837l.736-4.247-3.13-3a1.514 1.514 0 0 1-.39-1.569c.09-.271.254-.513.475-.698.22-.185.49-.306.776-.35L8.66 7.73l1.925-3.862c.128-.26.328-.48.577-.633a1.584 1.584 0 0 1 1.662 0c.25.153.45.373.577.633l1.925 3.847 4.334.615c.29.042.562.162.785.348.224.186.39.43.48.704a1.514 1.514 0 0 1-.404 1.58l-3.13 3 .736 4.247c.047.282.014.572-.096.837-.111.265-.294.494-.53.662a1.582 1.582 0 0 1-1.643.117l-3.865-2-3.865 2z"></path>
-                </svg>
-                ...
-              </div>
-            </a>
-          </div>
-          
-        </div>
+        ))}
       </div>
+      {!showAll && (
+        <div className="text-center mt-8">
+          <Link
+            href="/common/destinations"
+            className="text-blue-500 hover:text-blue-700"
+          >
+            <button className="inline-block px-6 py-3 text-sm font-medium leading-5 text-white uppercase transition duration-150 ease-in-out bg-blue-500 border border-transparent rounded-lg shadow hover:bg-blue-600 focus:outline-none focus:border-blue-700 focus:shadow-outline-blue active:bg-blue-700">
+              See More
+            </button>
+          </Link>
+        </div>
+      )}
     </div>
   );
 };

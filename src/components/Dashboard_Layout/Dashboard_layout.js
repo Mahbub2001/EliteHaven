@@ -57,6 +57,11 @@ const DashboardLayout = ({ children }) => {
       path: "/auth/generalluser/mybookings",
       roles: ["generaluser"],
     },
+    {
+      label: "Become a Host",
+      path: "/auth/generalluser/hostrequest",
+      roles: ["generaluser"],
+    },
     { label: "Host Profile", path: "/host-profile", roles: ["host"] },
     { label: "Edit Host Profile", path: "/edit-host-profile", roles: ["host"] },
     { label: "Add Advertisements", path: "/auth/hosts/addadvertisement", roles: ["host"] },

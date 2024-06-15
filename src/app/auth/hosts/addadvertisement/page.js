@@ -1,4 +1,3 @@
-// pages/add-advertisement.js
 "use client";
 
 import React, { useContext, useState } from "react";
@@ -7,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { AuthContext } from "@/context/auth";
 import DashboardLayout from "@/components/Dashboard_Layout/Dashboard_layout";
 import { uploadToImageBB } from "@/api/imgbb";
+import toast, { Toaster } from "react-hot-toast";
 
 const AddAdvertisement = () => {
   const { user } = useContext(AuthContext);
@@ -30,23 +30,23 @@ const AddAdvertisement = () => {
   const [imageUrls, setImageUrls] = useState([]);
   const [uploadingStatus, setUploadingStatus] = useState([]);
   const [isUploading, setIsUploading] = useState(false);
-//   const [thumbnailUrl, setThumbnailUrl] = useState("");
-//   const [thumbnailUploading, setThumbnailUploading] = useState(false);
+  const [thumbnailUrl, setThumbnailUrl] = useState("");
+  const [thumbnailUploading, setThumbnailUploading] = useState(false);
 
-//   const handleThumbnailUpload = async (e) => {
-//     const file = e.target.files[0];
-//     if (!file) return;
+  const handleThumbnailUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
 
-//     try {
-//       setThumbnailUploading(true);
-//       const imageUrl = await uploadToImageBB(file);
-//       setThumbnailUrl(imageUrl);
-//     } catch (error) {
-//       console.error("Error uploading thumbnail:", error);
-//     } finally {
-//       setThumbnailUploading(false);
-//     }
-//   };
+    try {
+      setThumbnailUploading(true);
+      const imageUrl = await uploadToImageBB(file);
+      setThumbnailUrl(imageUrl);
+    } catch (error) {
+      console.error("Error uploading thumbnail:", error);
+    } finally {
+      setThumbnailUploading(false);
+    }
+  };
 
   const handleImageUpload = async (e, index) => {
     const file = e.target.files[0];
@@ -90,7 +90,7 @@ const AddAdvertisement = () => {
         description: data.pictures[index]?.description || "",
       }))
       .filter((picture) => picture.image_url); 
-    //   data.thumbnail_picture = thumbnailUrl;
+      data.thumbnail_picture = thumbnailUrl;
 
     try {
       const response = await fetch("https://elitehaven-backend.onrender.com/advertisements/", {
@@ -106,8 +106,8 @@ const AddAdvertisement = () => {
         console.error("Failed to add advertisement:", response.statusText);
         return;
       }
-
-      // router.push("/advertisements"); // Redirect to advertisements page after successful submission
+      toast.success("Advertisement added successfully");
+      // router.push("/advertisements");
     } catch (error) {
       console.error("An error occurred:", error);
     }
@@ -279,7 +279,7 @@ const AddAdvertisement = () => {
             )}
           </div>
 
-          <div>
+          {/* <div>
             <label
               htmlFor="thumbnail_picture"
               className="block font-medium text-gray-700"
@@ -294,9 +294,9 @@ const AddAdvertisement = () => {
             {errors.thumbnail_picture && (
               <span className="text-red-600">This field is required</span>
             )}
-          </div>
+          </div> */}
 
-          {/* <div>
+          <div>
             <label
               htmlFor="thumbnail_picture"
               className="block font-medium text-gray-700"
@@ -318,7 +318,7 @@ const AddAdvertisement = () => {
                 className="mt-2 w-32 h-32 object-cover"
               />
             )}
-          </div> */}
+          </div>
 
           <div>
             <label
