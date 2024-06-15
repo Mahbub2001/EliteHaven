@@ -8,11 +8,11 @@ import { useInView } from "react-intersection-observer";
 const DownloadApp = () => {
   const imageVariants = {
     animate: {
-      y: [0, -10, 0], // Move up 10px, then back down
+      y: [0, -10, 0], 
       transition: {
-        duration: 2, // Duration of one cycle
-        repeat: Infinity, // Repeat forever
-        repeatType: "loop", // Repeat type
+        duration: 2, 
+        repeat: Infinity, 
+        repeatType: "loop", 
       },
     },
   };
@@ -28,8 +28,8 @@ const DownloadApp = () => {
   };
 
   const [ref, inView] = useInView({
-    triggerOnce: false, // Trigger the animation every time it comes into view
-    threshold: 0.1, // Trigger when 10% of the element is in view
+    triggerOnce: false, 
+    threshold: 0.1,
   });
 
   const controls = useAnimation();

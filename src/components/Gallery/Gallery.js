@@ -33,7 +33,7 @@ const Gallery = () => {
           }
         });
       },
-      { threshold: 0.1 } // Adjust the threshold as needed
+      { threshold: 0.1 } 
     );
 
     imageRefs.current.forEach((ref) => {
