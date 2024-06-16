@@ -188,20 +188,20 @@ const Destinations = () => {
                     </div>
                   </div>
                   <div className="col-span-8 sm:col-span-8">
-                    <div className="flex items-center">
+                    <div className="text-sm md:text-1xl flex flex-col md:flex-row items-center">
                       <div>
                         {destination.speciality && (
-                          <div className="m-4 space-x-2">
+                          <div className="m-4 space-x-2 flex flex-col md:flex-row gap-2">
                             {destination.speciality
                               .split(",")
                               .slice(0, 2)
                               .map((item, index) => (
-                                <span
+                                <p
                                   key={index}
                                   className="px-2 py-1 bg-orange-200 text-orange-800 rounded-full font-semibold text-xs uppercase tracking-wide"
                                 >
                                   {item.trim()}
-                                </span>
+                                </p>
                               ))}
                           </div>
                         )}
@@ -223,7 +223,10 @@ const Destinations = () => {
                       <div className="flex text-sm gap-5 text-gray-500 font-bold items-center">
                         <p>lcoation: {destination?.city}</p>
                         <p>{destination?.country}</p>
-                        <Link className="text-green-500" href="">
+                        <Link
+                          className="text-green-500"
+                          href={`/common/destinations/${destination?.id}`}
+                        >
                           See Details
                         </Link>
                         <button className="text-blue-500">Book Now</button>
