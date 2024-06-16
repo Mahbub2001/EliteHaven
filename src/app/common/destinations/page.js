@@ -165,8 +165,6 @@ const Destinations = () => {
         </div>
         <div className="lg:col-span-3 mt-8 lg:mt-0">
           <AnimatePresence>
-            {" "}
-            {/* AnimatePresence for animation handling */}
             {loading ? (
               <div className="text-center mt-4">
                 <p className="text-gray-600">Loading...</p>
