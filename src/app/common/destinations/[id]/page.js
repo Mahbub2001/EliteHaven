@@ -23,8 +23,64 @@ function AdverDetails({ params }) {
 
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
-  const [guests, setGuests] = useState(2);
+  const [guests, setGuests] = useState("1");
+  const [subtotal, setSubtotal] = useState(0);
+  const [disableDates, setDisableDates] = useState({});
 
+  useEffect(() => {
+    const today = new Date().toISOString().split("T")[0];
+    setDisableDates({ before: today });
+
+    if (fromDate && toDate && fromDate > toDate) {
+      setToDate("");
+      alert("To date cannot be before from date");
+    }
+
+    calculateSubtotal();
+  }, [fromDate, toDate, guests]);
+
+  const calculateSubtotal = () => {
+    if (!fromDate || !toDate) return;
+
+    const startDate = new Date(fromDate);
+    const endDate = new Date(toDate);
+    const durationInDays = (endDate - startDate) / (1000 * 60 * 60 * 24);
+
+    if (durationInDays < 0) {
+      setSubtotal(0);
+      alert("To date cannot be before from date");
+      return;
+    }
+
+    if (durationInDays < 30) {
+      const subtotal = durationInDays * advertisement.price_per_day;
+      setSubtotal(subtotal);
+    } else if (durationInDays >= 30 && durationInDays < 180) {
+      const months = Math.floor(durationInDays / 30);
+      const remainingDays = durationInDays % 30;
+
+      const subtotal =
+        months * advertisement.price_6_month +
+        (remainingDays / 30) * advertisement.price_6_month;
+      setSubtotal(subtotal);
+    } else if (durationInDays >= 365) {
+      const years = Math.floor(durationInDays / 365);
+      const remainingDays = durationInDays % 365;
+      const months = Math.floor(remainingDays / 30);
+
+      const subtotal =
+        years * advertisement.price_1_year +
+        (months / 12) * advertisement.price_1_year;
+      setSubtotal(subtotal);
+    }
+  };
+
+  const handleFromDateChange = (date) => {
+    setFromDate(date);
+    if (!toDate || toDate < date) {
+      setToDate("");
+    }
+  };
   useEffect(() => {
     if (id) {
       fetchAdvertisement(id);
@@ -349,7 +405,8 @@ function AdverDetails({ params }) {
                   type="date"
                   id="fromDate"
                   value={fromDate}
-                  onChange={(e) => setFromDate(e.target.value)}
+                  onChange={(e) => handleFromDateChange(e.target.value)}
+                  min={disableDates.before}
                   className="mt-1 p-2 block w-full border border-gray-300 rounded-md"
                 />
               </div>
@@ -365,6 +422,7 @@ function AdverDetails({ params }) {
                   id="toDate"
                   value={toDate}
                   onChange={(e) => setToDate(e.target.value)}
+                  min={fromDate || disableDates.before}
                   className="mt-1 p-2 block w-full border border-gray-300 rounded-md"
                 />
               </div>
@@ -390,7 +448,7 @@ function AdverDetails({ params }) {
               <div className="mb-4 text-center">
                 <p className="text-gray-500 text-xs font-bold">Subtotal</p>
                 <span className="text-2xl font-bold text-[#7BBCB0]">
-                  $78.90
+                  ${subtotal.toFixed(2)}
                 </span>
               </div>
               <button className="w-full bg-[#7BBCB0] font-bold text-white py-4 px-4 rounded-md hover:bg-[#72ccbc] transition duration-300">
@@ -447,7 +505,9 @@ function AdverDetails({ params }) {
                   </div>
                 </div>
                 <div className="flex flex-col items-center">
-                  <p className="ml-5 text-sm mb-1 text-gray-400 font-bold">SAFETY</p>
+                  <p className="ml-5 text-sm mb-1 text-gray-400 font-bold">
+                    SAFETY
+                  </p>
                   <div className="flex items-center text-xl font-bold">
                     <svg
                       className="w-4 h-4 mr-2 text-yellow-500"
