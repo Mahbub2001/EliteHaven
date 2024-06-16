@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import Link from "next/link";
 
 const Destinations = () => {
   const [destinations, setDestinations] = useState([]);
@@ -13,6 +15,7 @@ const Destinations = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [sortBy, setSortBy] = useState(null);
   const [sortOrder, setSortOrder] = useState("asc");
+  const [loading, setLoading] = useState(false);
 
   const itemPerPage = 5;
 
@@ -21,6 +24,7 @@ const Destinations = () => {
   }, [currentPage, sortBy, sortOrder]);
 
   const fetchDestinations = async () => {
+    setLoading(true);
     try {
       let url = `https://elitehaven-backend.onrender.com/public/advertisements/?page=${currentPage}&page_size=${itemPerPage}`;
       const params = new URLSearchParams({
@@ -42,6 +46,8 @@ const Destinations = () => {
       setTotalPages(data.num_pages);
     } catch (error) {
       console.error("Error fetching data:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -158,64 +164,88 @@ const Destinations = () => {
           </form>
         </div>
         <div className="lg:col-span-3 mt-8 lg:mt-0">
-          {destinations.map((destination) => (
-            <div
-              key={destination.id}
-              className="md:grid grid-cols-12 overflow-hidden rounded-lg shadow-md bg-white hover:shadow-xl transition duration-300 ease-in-out mb-4"
-            >
-              {/* Image */}
-              <div className="col-span-2 sm:col-span-2">
-                <div className="h-[100%]">
-                  <img
-                    className="rounded-sm h-[100%] w-full object-cover"
-                    src={destination.thumbnail_picture}
-                    alt={destination.title}
-                  />
-                </div>
+          <AnimatePresence>
+            {" "}
+            {/* AnimatePresence for animation handling */}
+            {loading ? (
+              <div className="text-center mt-4">
+                <p className="text-gray-600">Loading...</p>
               </div>
-              <div className="col-span-8 sm:col-span-8">
-                <div className="flex items-center">
-                  <div>
-                    {destination.speciality && (
-                      <div className="m-4 space-x-2">
-                        {destination.speciality
-                          .split(",")
-                          .slice(0, 2)
-                          .map((item, index) => (
-                            <span
-                              key={index}
-                              className="px-2 py-1 bg-orange-200 text-orange-800 rounded-full font-semibold text-xs uppercase tracking-wide"
-                            >
-                              {item.trim()}
-                            </span>
-                          ))}
-                      </div>
-                    )}
-                  </div>
-                  <div className="flex items-center ml-4 border-l pl-4">
-                    <div className="flex items-center">
-                      {renderStars(destination.average_rating)}
-                      <span className="ml-2 text-xs text-gray-600">
-                        ({destination.review_count} reviews)
-                      </span>
+            ) : (
+              destinations.map((destination) => (
+                <motion.div
+                  key={destination.id}
+                  className="md:grid grid-cols-12 overflow-hidden rounded-lg shadow-md bg-white hover:shadow-xl transition duration-300 ease-in-out mb-4"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                >
+                  <div className="col-span-2 sm:col-span-2">
+                    <div className="h-[100%]">
+                      <img
+                        className="rounded-sm h-[100%] w-full object-cover"
+                        src={destination.thumbnail_picture}
+                        alt={destination.title}
+                      />
                     </div>
                   </div>
-                </div>
-                <div className="p-4">
-                  <h2 className="text-lg font-bold mb-2 leading-tight">
-                    {destination.title}
-                  </h2>
-                  <p className="text-sm mb-4">{destination.description}</p>
-                </div>
-              </div>
-              <div className="col-span-2 sm:col-span-2 flex justify-center sm:justify-start sm:ml-4 sm:flex-shrink-0">
-                <div className="text-sm py-16 text-center text-[#7BBCB0]">
-                  ${destination.price_per_day}
-                  <span className="block text-gray-500">per person</span>
-                </div>
-              </div>
-            </div>
-          ))}
+                  <div className="col-span-8 sm:col-span-8">
+                    <div className="flex items-center">
+                      <div>
+                        {destination.speciality && (
+                          <div className="m-4 space-x-2">
+                            {destination.speciality
+                              .split(",")
+                              .slice(0, 2)
+                              .map((item, index) => (
+                                <span
+                                  key={index}
+                                  className="px-2 py-1 bg-orange-200 text-orange-800 rounded-full font-semibold text-xs uppercase tracking-wide"
+                                >
+                                  {item.trim()}
+                                </span>
+                              ))}
+                          </div>
+                        )}
+                      </div>
+                      <div className="flex items-center ml-4 border-l pl-4">
+                        <div className="flex items-center">
+                          {renderStars(destination.average_rating)}
+                          <span className="ml-2 text-xs text-gray-600">
+                            ({destination.review_count} reviews)
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="px-4">
+                      <h2 className="text-lg font-bold mb-1 leading-tight">
+                        {destination.title}
+                      </h2>
+                      <p className="text-sm mb-1">{destination.description}</p>
+                      <div className="flex text-sm gap-5 text-gray-500 font-bold items-center">
+                        <p>lcoation: {destination?.city}</p>
+                        <p>{destination?.country}</p>
+                        <Link className="text-green-500" href="">
+                          See Details
+                        </Link>
+                        <button className="text-blue-500">Book Now</button>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="col-span-2 sm:col-span-2 flex justify-center sm:justify-start sm:ml-4 sm:flex-shrink-0">
+                    <div className="text-sm py-16 text-center text-[#7BBCB0]">
+                      ${destination.price_per_day}
+                      <span className="block text-gray-500">per person</span>
+                    </div>
+                  </div>
+                </motion.div>
+              ))
+            )}
+          </AnimatePresence>
+
+          {!loading && destinations.length === 0 && (
+            <p className="text-center mt-4">No destinations found.</p>
+          )}
 
           <div className="flex justify-center mt-4">
             <nav className="bg-white rounded-md shadow-md p-4 flex flex-col lg:flex-row items-center justify-between w-full md:w-auto">
@@ -230,7 +260,7 @@ const Destinations = () => {
                         ? "bg-gray-300 text-gray-700"
                         : "bg-blue-500 text-white hover:bg-blue-600"
                     } rounded-md`}
-                    disabled={currentPage === 1}
+                    disabled={currentPage === 1 || loading}
                   >
                     Previous
                   </button>
@@ -244,6 +274,7 @@ const Destinations = () => {
                           ? "bg-blue-500 text-white hover:bg-blue-600"
                           : "bg-gray-300 text-gray-700"
                       } rounded-md`}
+                      disabled={loading}
                     >
                       {index + 1}
                     </button>
@@ -261,7 +292,7 @@ const Destinations = () => {
                         ? "bg-gray-300 text-gray-700"
                         : "bg-blue-500 text-white hover:bg-blue-600"
                     } rounded-md`}
-                    disabled={currentPage === totalPages}
+                    disabled={currentPage === totalPages || loading}
                   >
                     Next
                   </button>
@@ -274,6 +305,7 @@ const Destinations = () => {
                 <select
                   onChange={handleSortChange}
                   className="mt-1 block w-full md:w-auto px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                  disabled={loading}
                 >
                   <option value="">None</option>
                   <option value="title">Title</option>
@@ -283,6 +315,7 @@ const Destinations = () => {
                 <button
                   onClick={handleSortOrderChange}
                   className="text-sm font-medium text-gray-700 hover:text-gray-900 cursor-pointer ml-2 mt-2 md:mt-0"
+                  disabled={loading}
                 >
                   {sortOrder === "asc" ? "Ascending" : "Descending"}
                 </button>
