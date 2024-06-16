@@ -108,7 +108,7 @@ const MoreDestination = () => {
                   </svg>
                   Add to Wishlist
                 </button>
-                <Link href={`/details/${destination.id}`}>
+                <Link href={`/common/destinations/${destination?.id}`}>
                   <p className="flex items-center hover:text-blue-500">
                     <svg
                       className="h-5 w-5 fill-current mr-1"
