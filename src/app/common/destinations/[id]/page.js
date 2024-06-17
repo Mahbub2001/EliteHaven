@@ -526,7 +526,7 @@ function AdverDetails({ params }) {
           </div>
         </div>
         <div>
-        <DetailsAddReviewSection advertisement={advertisement} />
+          <DetailsAddReviewSection advertisement={advertisement} />
         </div>
       </div>
     </div>

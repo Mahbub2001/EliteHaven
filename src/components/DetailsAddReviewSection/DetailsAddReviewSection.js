@@ -160,7 +160,7 @@ function DetailsAddReviewSection({ advertisement }) {
                     <span className="ml-2">Share</span>
                   </button>
                   <span className="">Was this review helpful?</span>
-                  <button className="flex items-center ml-6">
+                  <button className="flex items-center md:ml-6">
                     <SlLike className="w-4 h-4" />
                     <span className="ml-2">56</span>
                   </button>

@@ -243,11 +243,9 @@ const Destinations = () => {
               ))
             )}
           </AnimatePresence>
-
           {!loading && destinations.length === 0 && (
             <p className="text-center mt-4">No destinations found.</p>
           )}
-
           <div className="flex justify-center mt-4">
             <nav className="bg-white rounded-md shadow-md p-4 flex flex-col lg:flex-row items-center justify-between w-full md:w-auto">
               <ul className="flex space-x-4">
