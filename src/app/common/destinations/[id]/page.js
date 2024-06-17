@@ -14,6 +14,7 @@ import { TiCancel } from "react-icons/ti";
 import { FaMobileAlt, FaTeamspeak } from "react-icons/fa";
 import { GiElectric, GiHealthCapsule } from "react-icons/gi";
 import { PiSecurityCameraFill } from "react-icons/pi";
+import DetailsAddReviewSection from "@/components/DetailsAddReviewSection/DetailsAddReviewSection";
 
 function AdverDetails({ params }) {
   // console.log(params);
@@ -523,6 +524,9 @@ function AdverDetails({ params }) {
               </div>
             </div>
           </div>
+        </div>
+        <div>
+        <DetailsAddReviewSection advertisement={advertisement} />
         </div>
       </div>
     </div>
