@@ -139,11 +139,13 @@ function DetailsAddReviewSection({ advertisement }) {
               </div>
               <div className="flex flex-col md:flex-row md:items-center mt-2 text-gray-600">
                 <div className="flex items-center">
-                  <span className="text-xs md:text-sm ">Product Quality</span>
+                  <span className="text-xs md:text-sm mr-1">
+                    Product Quality
+                  </span>
                   {renderStars2(review?.rating)}
                 </div>
                 <div className="flex items-center md:ml-4">
-                  <span className="text-sm">Purchasing Experience</span>
+                  <span className="text-sm mr-1">Purchasing Experience</span>
                   {renderStars2(review?.rating)}
                 </div>
               </div>
