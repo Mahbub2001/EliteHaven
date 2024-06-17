@@ -18,10 +18,11 @@ export default function RootLayout({ children }) {
     <AuthProvider>
       <html lang="en">
         <body className={inter.className}>
+          <link rel="icon" href="/fav.png" sizes="any" />
           <Navbar />
           {children}
           <Footer />
-        <Toaster />
+          <Toaster />
         </body>
       </html>
     </AuthProvider>
