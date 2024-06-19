@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -15,13 +15,14 @@ import { FaMobileAlt, FaTeamspeak } from "react-icons/fa";
 import { GiElectric, GiHealthCapsule } from "react-icons/gi";
 import { PiSecurityCameraFill } from "react-icons/pi";
 import DetailsAddReviewSection from "@/components/DetailsAddReviewSection/DetailsAddReviewSection";
+import toast from "react-hot-toast";
+import { AuthContext } from "@/context/auth";
 
 function AdverDetails({ params }) {
-  // console.log(params);
+  const {user} = useContext(AuthContext);
   const { id } = params;
   const [advertisement, setAdvertisement] = useState(null);
   const [currentImage, setCurrentImage] = useState(null);
-
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
   const [guests, setGuests] = useState("1");
@@ -171,6 +172,43 @@ function AdverDetails({ params }) {
       </motion.div>
     );
   };
+
+  const token = typeof window !== 'undefined' ? localStorage.getItem("elite_token") : null;
+
+  const confirmBooking = async () => {
+    const data = {
+      from_date: fromDate,
+      to_date: toDate,
+      number_of_persons: parseInt(guests),
+      advertisement: advertisement.id,
+      subtotal: subtotal,
+      is_completed: false,
+      user: user, 
+      item: advertisement?.id
+    };
+    console.log(data);
+    try {
+      const response = await fetch('https://elitehaven-backend.onrender.com/bookings/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Token ${token}`,
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.detail || 'Failed to confirm booking');
+      }
+
+      toast.success('Booking confirmed successfully! Complete your payment from your dashboard');
+    } catch (error) {
+      console.error('Error confirming booking:', error.message);
+      alert('Failed to confirm booking. Please try again later.');
+    }
+  };
+
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -452,7 +490,9 @@ function AdverDetails({ params }) {
                   ${subtotal.toFixed(2)}
                 </span>
               </div>
-              <button className="w-full bg-[#7BBCB0] font-bold text-white py-4 px-4 rounded-md hover:bg-[#72ccbc] transition duration-300">
+              <button 
+               onClick={confirmBooking}
+              className="w-full bg-[#7BBCB0] font-bold text-white py-4 px-4 rounded-md hover:bg-[#72ccbc] transition duration-300">
                 Confirm Booking
               </button>
               <div className="mt-1">
