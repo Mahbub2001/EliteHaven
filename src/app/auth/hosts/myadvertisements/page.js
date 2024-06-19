@@ -5,19 +5,21 @@ import DashboardLayout from "@/components/Dashboard_Layout/Dashboard_layout";
 import { AuthContext } from "@/context/auth";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
+import toast from "react-hot-toast"; 
 
 function My_Advertisements() {
-  const { user, loading } = useContext(AuthContext);
+  const { user, loading,change,setChange } = useContext(AuthContext);
   const [advertisements, setAdvertisements] = useState([]);
+  const [confirmation, setConfirmation] = useState(null); 
+  const token = localStorage.getItem("elite_token");
 
-  console.log(user);
   useEffect(() => {
     const fetchadddata = async () => {
       if (!user) return;
 
       try {
         const response = await fetch(
-          `https://elitehaven-backend.onrender.com/public/advertisements/?host_id=${user}`,
+          `https://elitehaven-backend.onrender.com/public/advertisements/?host_id=${user}`, 
           {
             method: "GET",
             headers: {
@@ -27,7 +29,7 @@ function My_Advertisements() {
         );
 
         if (!response.ok) {
-          console.error("Failed to fetch profile data");
+          console.error("Failed to fetch advertisements data");
           return;
         }
 
@@ -39,10 +41,7 @@ function My_Advertisements() {
     };
 
     fetchadddata();
-  }, [user]);
-
-  console.log(user);
-  console.log(advertisements);
+  }, [user,change]);
 
   const renderStars = (averageRating) => {
     const stars = [];
@@ -60,6 +59,44 @@ function My_Advertisements() {
       );
     }
     return stars;
+  };
+
+  const handleDelete = async (advertisementId) => {
+    try {
+      const response = await fetch(
+        `https://elitehaven-backend.onrender.com/advertisements/${advertisementId}/`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Token ${token}`,
+          },
+        }
+      );
+  
+      if (!response.ok) {
+        console.error("Failed to delete advertisement");
+        return;
+      }
+  
+      setAdvertisements((prevAds) =>
+        prevAds.filter((ad) => ad.id !== advertisementId)
+      );
+      toast.success("Advertisement deleted successfully");
+      setConfirmation(null);
+      setChange(!change);
+  
+    } catch (error) {
+      console.error("An error occurred:", error);
+    }
+  };
+  
+  const handleDeleteConfirmation = (advertisementId) => {
+    setConfirmation(advertisementId); 
+  };
+
+  const handleCancelDelete = () => {
+    setConfirmation(null); 
   };
 
   return (
@@ -122,7 +159,7 @@ function My_Advertisements() {
                     </h2>
                     <p className="text-sm mb-1">{destination.description}</p>
                     <div className="flex text-sm gap-5 text-gray-500 font-bold items-center">
-                      <p>lcoation: {destination?.city}</p>
+                      <p>Location: {destination?.city}</p>
                       <p>{destination?.country}</p>
                       <Link
                         className="text-green-500"
@@ -130,7 +167,21 @@ function My_Advertisements() {
                       >
                         See Details
                       </Link>
-                      <button className="text-blue-500">Book Now</button>
+                      <Link
+                        className="text-blue-500"
+                        href={{
+                          pathname: `/auth/hosts/myadvertisements/${destination?.id}`,
+                          query: { destination: JSON.stringify(destination) },
+                        }}
+                      >
+                        Edit Now
+                      </Link>
+                      <button
+                        onClick={() => handleDeleteConfirmation(destination.id)}
+                        className="text-red-500"
+                      >
+                        Delete
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -146,6 +197,28 @@ function My_Advertisements() {
         </AnimatePresence>
         {!loading && advertisements.length === 0 && (
           <p className="text-center mt-4">No destinations found.</p>
+        )}
+        {confirmation && (
+          <div className="fixed bottom-0 left-0 z-50 p-4 bg-white shadow-md border border-gray-200 rounded-md mx-4 mb-4">
+            <p className="text-lg font-semibold mb-2">Confirm Deletion</p>
+            <p className="text-sm mb-4">
+              Are you sure you want to delete this advertisement?
+            </p>
+            <div className="flex justify-end">
+              <button
+                onClick={() => handleDelete(confirmation)}
+                className="px-4 py-2 bg-red-500 text-white rounded-md mr-2 hover:bg-red-600"
+              >
+                Yes, Delete
+              </button>
+              <button
+                onClick={handleCancelDelete}
+                className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
         )}
       </div>
     </DashboardLayout>

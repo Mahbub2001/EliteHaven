@@ -1,16 +1,28 @@
+// 'use client'
+
+import { AuthContext } from "@/context/auth";
 import Image from "next/image";
 import Link from "next/link";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import { useRouter } from "next/navigation";
 
 const MoreDestination = () => {
   const [destinations, setDestinations] = useState([]);
   const [showAll, setShowAll] = useState(false);
+  const router = useRouter();
+
+  const { change } = useContext(AuthContext);
 
   useEffect(() => {
+    router.refresh();
     const fetchDestinations = async () => {
       try {
         const response = await fetch(
-          "https://elitehaven-backend.onrender.com/public/advertisements/"
+          "https://elitehaven-backend.onrender.com/public/advertisements/",{
+            next:{
+              revalidate:5
+            }
+          }
         );
         if (!response.ok) {
           throw new Error("Failed to fetch data");
@@ -23,7 +35,7 @@ const MoreDestination = () => {
     };
 
     fetchDestinations();
-  }, []);
+  }, [change]);
 
   const displayedDestinations = showAll
     ? destinations

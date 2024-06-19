@@ -66,11 +66,6 @@ const DashboardLayout = ({ children }) => {
     { label: "Edit Host Profile", path: "/edit-host-profile", roles: ["host"] },
     { label: "Add Advertisements", path: "/auth/hosts/addadvertisement", roles: ["host"] },
     { label: "My Advertisements", path: "/auth/hosts/myadvertisements", roles: ["host"] },
-    {
-      label: "Edit Advertisements",
-      path: "/edit-advertisements",
-      roles: ["host"],
-    },
   ];
 
   const filterLinksByRole = (links) => {

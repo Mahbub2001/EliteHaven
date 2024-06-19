@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
+import { AuthContext } from "@/context/auth";
 
 const Destinations = () => {
   const [destinations, setDestinations] = useState([]);
@@ -17,11 +18,15 @@ const Destinations = () => {
   const [sortOrder, setSortOrder] = useState("asc");
   const [loading, setLoading] = useState(false);
 
+  const { change } = useContext(AuthContext);
+
+  console.log(change);
+
   const itemPerPage = 5;
 
   useEffect(() => {
     fetchDestinations();
-  }, [currentPage, sortBy, sortOrder]);
+  }, [currentPage, sortBy, sortOrder,change]);
 
   const fetchDestinations = async () => {
     setLoading(true);

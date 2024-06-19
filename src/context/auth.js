@@ -12,6 +12,7 @@ const AuthProvider = ({ children }) => {
   const router = useRouter();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [change,setChange] = useState(false);
 
   useEffect(() => {
     setLoading(true);
@@ -82,6 +83,8 @@ const AuthProvider = ({ children }) => {
     loading,
     signin,
     logout,
+    change,
+    setChange,
   };
 
   return (

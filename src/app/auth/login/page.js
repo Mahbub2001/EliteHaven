@@ -12,6 +12,7 @@ const Login = () => {
   });
   const [error, setError] = useState("");
   const { user, logout, signin } = useContext(AuthContext);
+  const [loading, setLoading] = useState(false);
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevFormData) => ({
@@ -22,6 +23,7 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
       const response = await signin(formData.email, formData.password);
       if (!response.success) {
@@ -29,11 +31,18 @@ const Login = () => {
         toast.error(response.error);
       } else {
       }
+      setLoading(false);
     } catch (error) {}
   };
   return (
     <section className="gradient-form my-20">
       {error && <p className="text-center text-red-600">{error}</p>}
+      {loading && (
+        <div className="flex justify-center items-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-900"></div>
+          <p className="ml-4">Submitting...</p>
+        </div>
+      )}
       <div className="container mx-auto flex justify-center items-center h-full">
         <div className="w-full max-w-3xl bg-white rounded-lg shadow-lg p-8 md:p-12 lg:flex lg:space-x-8">
           <div className="lg:w-1/2">

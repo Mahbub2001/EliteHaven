@@ -32,6 +32,7 @@ const AddAdvertisement = () => {
   const [isUploading, setIsUploading] = useState(false);
   const [thumbnailUrl, setThumbnailUrl] = useState("");
   const [thumbnailUploading, setThumbnailUploading] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleThumbnailUpload = async (e) => {
     const file = e.target.files[0];
@@ -82,6 +83,8 @@ const AddAdvertisement = () => {
     if (!user || isUploading || uploadingStatus.some((status) => status))
       return;
 
+    setLoading(true);
+
     const token = localStorage.getItem("elite_token");
     data.host = user;
     data.pictures = imageUrls
@@ -89,24 +92,28 @@ const AddAdvertisement = () => {
         image_url: imageUrl,
         description: data.pictures[index]?.description || "",
       }))
-      .filter((picture) => picture.image_url); 
-      data.thumbnail_picture = thumbnailUrl;
+      .filter((picture) => picture.image_url);
+    data.thumbnail_picture = thumbnailUrl;
 
     try {
-      const response = await fetch("https://elitehaven-backend.onrender.com/advertisements/", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Token ${token}`,
-        },
-        body: JSON.stringify(data),
-      });
+      const response = await fetch(
+        "https://elitehaven-backend.onrender.com/advertisements/",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Token ${token}`,
+          },
+          body: JSON.stringify(data),
+        }
+      );
 
       if (!response.ok) {
         console.error("Failed to add advertisement:", response.statusText);
         return;
       }
-      toast.success("Advertisement added successfully");
+      toast.success("Advertisement added successfully") ;
+      setLoading(false);
       // router.push("/advertisements");
     } catch (error) {
       console.error("An error occurred:", error);
@@ -117,6 +124,12 @@ const AddAdvertisement = () => {
     <DashboardLayout>
       <div className="container mx-auto py-8">
         <h2 className="text-3xl font-semibold mb-4">Add Advertisement</h2>
+        {loading && (
+          <div className="flex justify-center items-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-900"></div>
+            <p className="ml-4">Submitting...</p>
+          </div>
+        )}
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div>
             <label htmlFor="title" className="block font-medium text-gray-700">
