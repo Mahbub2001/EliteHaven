@@ -8,7 +8,8 @@ import { AuthContext } from "@/context/auth";
 function My_Bookings() {
   const [bookings, setBookings] = useState([]);
   const { user } = useContext(AuthContext);
-  const token = localStorage.getItem("elite_token");
+  const token = typeof window !== 'undefined' ? localStorage.getItem("elite_token") : null;
+
 
   useEffect(() => {
     if (!token || !user) {
