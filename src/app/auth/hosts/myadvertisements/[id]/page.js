@@ -11,7 +11,7 @@ function EditAdvertise() {
   const [data, setData] = useState(null);
   const [previewImage, setPreviewImage] = useState(null);
   const [formChanged, setFormChanged] = useState(false);
-  const token = localStorage.getItem("elite_token");
+  const token = typeof window !== 'undefined' ? localStorage.getItem("elite_token") : null;
   const [loading, setLoading] = useState(false);
 
   const {change,setChange} = useContext(AuthContext)

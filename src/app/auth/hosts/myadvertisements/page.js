@@ -11,7 +11,7 @@ function My_Advertisements() {
   const { user, loading,change,setChange } = useContext(AuthContext);
   const [advertisements, setAdvertisements] = useState([]);
   const [confirmation, setConfirmation] = useState(null); 
-  const token = localStorage.getItem("elite_token");
+  const token = typeof window !== 'undefined' ? localStorage.getItem("elite_token") : null;
 
   useEffect(() => {
     const fetchadddata = async () => {
